@@ -14,24 +14,19 @@ where
 {
     start: T,
     cache: Vec<[HashSet<T>; 2]>,
-    action: Vec<Construct<T>>,
+    action: Vec<Products<T>>,
     map: HashMap<T, usize>,
 }
 
 #[derive(Debug, Default, Clone)]
-pub struct Action<T>(Vec<T>)
+pub struct Product<T>(Vec<T>)
 where
     T: Hash + Eq + std::fmt::Debug + Symbols;
 
 #[derive(Debug, Default, Clone)]
-pub struct Actions<T>(Vec<Action<T>>)
+pub struct Products<T>(Vec<Product<T>>)
 where
     T: Hash + Eq + std::fmt::Debug + Symbols;
-
-#[derive(Debug, Default, Clone)]
-pub struct Construct<T>(Actions<T>)
-where
-    T: Hash + Eq + std::fmt::Debug + Symbols + Clone;
 
 #[macro_export]
 macro_rules! Symbol {
@@ -43,23 +38,23 @@ macro_rules! Symbol {
         {
             $($id,)+
             Terminal(T),
-            Epilison,
+            Epsilon,
         }
         impl<T> Symbols for $name<T>
         where
             T: std::fmt::Debug + Eq + std::hash::Hash + Default,
         {
-            fn is_epilison(&self) -> bool {
+            fn is_epsilon(&self) -> bool {
                 match self {
-                    Self::Epilison => true,
+                    Self::Epsilon => true,
                     _ => false,
                 }
             }
-            fn epilison() -> Self {
-                Self::Epilison
+            fn epsilon() -> Self {
+                Self::Epsilon
             }
             fn is_nonterminal(&self) -> bool {
-                !matches!(self, Self::Terminal(_) | Self::Epilison)
+                !matches!(self, Self::Terminal(_) | Self::Epsilon)
             }
         }
         impl<T> Default for $name<T>
@@ -67,15 +62,28 @@ macro_rules! Symbol {
             T: std::fmt::Debug + Eq + std::hash::Hash + Default,
         {
             fn default() -> Self {
-                Self::Epilison
+                Self::Epsilon
             }
         }
     };
 }
 
+// pub trait LLGrammar {
+//     fn is_left_recursion(&self) -> bool;
+//     fn is_cycle(&self) -> bool;
+//     fn is_epilison_product(&self) -> bool;
+//     type EliminationLeftRecursion;
+//     fn elimination_left_recursion(&self) -> Self::EliminationLeftRecursion;
+//     // fn elimination_cycle<T: LLGrammar>(&self) -> T;
+//     // fn elimination_epilison(&self) -> LLGrammar;
+//     fn follow<V: Symbols, T: IntoIterator>(&self, sign: V) -> T;
+//     fn first<V: Symbols, T: IntoIterator>(&self, sign: V) -> T;
+//     // fn left_factoring(&self) -> impl LL;
+// }
+
 pub trait Symbols {
-    fn is_epilison(&self) -> bool;
-    fn epilison() -> Self;
+    fn is_epsilon(&self) -> bool;
+    fn epsilon() -> Self;
     fn is_terminal(&self) -> bool {
         !self.is_nonterminal()
     }

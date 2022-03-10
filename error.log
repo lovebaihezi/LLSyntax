@@ -1,0 +1,140 @@
+   Compiling syntax v0.1.0 (/home/lqxc/Projects/syntax)
+warning: unused import: `HashSet`
+ --> src/grammar/mod.rs:6:28
+  |
+6 |     collections::{HashMap, HashSet},
+  |                            ^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unreachable expression
+   --> src/grammar/implement.rs:117:9
+    |
+116 |         todo!();
+    |         ------- any code following this expression is unreachable
+117 |         s
+    |         ^ unreachable expression
+    |
+    = note: `#[warn(unreachable_code)]` on by default
+
+warning: unused import: `rayon::prelude`
+ --> src/grammar/implement.rs:1:5
+  |
+1 | use rayon::prelude::*;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused variable: `s`
+   --> src/grammar/implement.rs:109:17
+    |
+109 |         let mut s = G::new(State::NonTerminal(0));
+    |                 ^ help: if this is intentional, prefix it with an underscore: `_s`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `map`
+   --> src/grammar/implement.rs:110:13
+    |
+110 |         let map: HashMap<&T, usize> = self
+    |             ^^^ help: if this is intentional, prefix it with an underscore: `_map`
+
+warning: variable does not need to be mutable
+   --> src/grammar/implement.rs:109:13
+    |
+109 |         let mut s = G::new(State::NonTerminal(0));
+    |             ----^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` on by default
+
+warning: variant is never constructed: `CycleProduct`
+  --> src/grammar/implement.rs:10:5
+   |
+10 |     CycleProduct,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: variant is never constructed: `EpsilonProduct`
+  --> src/grammar/implement.rs:11:5
+   |
+11 |     EpsilonProduct,
+   |     ^^^^^^^^^^^^^^
+
+warning: variant is never constructed: `NonTerminal`
+  --> src/grammar/implement.rs:19:5
+   |
+19 |     NonTerminal(usize),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variant is never constructed: `Terminal`
+  --> src/grammar/implement.rs:20:5
+   |
+20 |     Terminal(usize),
+   |     ^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `new`
+  --> src/grammar/implement.rs:49:12
+   |
+49 |     pub fn new(start: T) -> Self {
+   |            ^^^
+
+warning: associated function is never used: `nonterminals`
+  --> src/grammar/implement.rs:57:12
+   |
+57 |     pub fn nonterminals(&self) -> Vec<&T> {
+   |            ^^^^^^^^^^^^
+
+warning: associated function is never used: `is_left_recursion`
+  --> src/grammar/implement.rs:61:8
+   |
+61 |     fn is_left_recursion(&self) -> bool {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `elimination_left_recursion`
+   --> src/grammar/implement.rs:105:8
+    |
+105 |     fn elimination_left_recursion(&self) -> G<State> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `is_cycle`
+   --> src/grammar/implement.rs:121:8
+    |
+121 |     fn is_cycle(&self) -> bool {
+    |        ^^^^^^^^
+
+warning: associated function is never used: `is_epsilon_product`
+   --> src/grammar/implement.rs:166:8
+    |
+166 |     fn is_epsilon_product(&self) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `first`
+   --> src/grammar/implement.rs:175:8
+    |
+175 |     fn first(&self, sign: T) -> HashSet<T> {
+    |        ^^^^^
+
+warning: associated function is never used: `will_product_epslion`
+   --> src/grammar/implement.rs:200:8
+    |
+200 |     fn will_product_epslion(&self, sign: &T) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `follow`
+   --> src/grammar/implement.rs:234:8
+    |
+234 |     fn follow(&self, sign: T) -> HashSet<T> {
+    |        ^^^^^^
+
+warning: field is never read: `start`
+  --> src/grammar/mod.rs:15:5
+   |
+15 |     start: T,
+   |     ^^^^^^^^
+
+warning: `syntax` (lib) generated 20 warnings
+warning: `syntax` (lib test) generated 9 warnings (9 duplicates)
+    Finished test [unoptimized + debuginfo] target(s) in 0.87s
+     Running unittests (target/debug/deps/syntax-52ab081378c8a685)
+   Doc-tests syntax

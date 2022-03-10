@@ -13,7 +13,6 @@ where
     T: Hash + Eq + std::fmt::Debug + Symbols + Clone,
 {
     start: T,
-    cache: Vec<[HashSet<T>; 2]>,
     action: Vec<Products<T>>,
     map: HashMap<T, usize>,
 }
@@ -23,10 +22,14 @@ pub struct Product<T>(Vec<T>)
 where
     T: Hash + Eq + std::fmt::Debug + Symbols;
 
+unsafe impl<T> Send for Product<T> where T: Hash + Eq + std::fmt::Debug + Symbols + Send {}
+
 #[derive(Debug, Default, Clone)]
 pub struct Products<T>(Vec<Product<T>>)
 where
     T: Hash + Eq + std::fmt::Debug + Symbols;
+
+unsafe impl<T> Send for Products<T> where T: Hash + Eq + std::fmt::Debug + Symbols + Send {}
 
 #[macro_export]
 macro_rules! Symbol {
@@ -39,6 +42,7 @@ macro_rules! Symbol {
             $($id,)+
             Terminal(T),
             Epsilon,
+            Dollar,
         }
         impl<T> Symbols for $name<T>
         where
@@ -54,7 +58,13 @@ macro_rules! Symbol {
                 Self::Epsilon
             }
             fn is_nonterminal(&self) -> bool {
-                !matches!(self, Self::Terminal(_) | Self::Epsilon)
+                !matches!(self, Self::Terminal(_) | Self::Epsilon | Self::Dollar)
+            }
+            fn is_dollar(&self) -> bool {
+                matches!(self, Self::Dollar)
+            }
+            fn dollar() -> Self {
+                Self::Dollar
             }
         }
         impl<T> Default for $name<T>
@@ -65,29 +75,31 @@ macro_rules! Symbol {
                 Self::Epsilon
             }
         }
+        impl<T> std::fmt::Display for $name<T>
+        where
+            T: std::fmt::Debug + Eq + std::hash::Hash + Default + std::fmt::Display,
+        {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                match self {
+                    Self::Terminal(v) => f.write_fmt(format_args!("{}", v)),
+                    Self::Dollar => f.write_str("$"),
+                    Self::Epsilon => f.write_str("𝜀"),
+                    v => f.write_fmt(format_args!("{:?}", v))
+                }
+            }
+        }
     };
 }
-
-// pub trait LLGrammar {
-//     fn is_left_recursion(&self) -> bool;
-//     fn is_cycle(&self) -> bool;
-//     fn is_epilison_product(&self) -> bool;
-//     type EliminationLeftRecursion;
-//     fn elimination_left_recursion(&self) -> Self::EliminationLeftRecursion;
-//     // fn elimination_cycle<T: LLGrammar>(&self) -> T;
-//     // fn elimination_epilison(&self) -> LLGrammar;
-//     fn follow<V: Symbols, T: IntoIterator>(&self, sign: V) -> T;
-//     fn first<V: Symbols, T: IntoIterator>(&self, sign: V) -> T;
-//     // fn left_factoring(&self) -> impl LL;
-// }
 
 pub trait Symbols {
     fn is_epsilon(&self) -> bool;
     fn epsilon() -> Self;
     fn is_terminal(&self) -> bool {
-        !self.is_nonterminal()
+        !Symbols::is_nonterminal(self) && !Symbols::is_epsilon(self)
     }
     fn is_nonterminal(&self) -> bool;
+    fn is_dollar(&self) -> bool;
+    fn dollar() -> Self;
 }
 
 #[cfg(test)]

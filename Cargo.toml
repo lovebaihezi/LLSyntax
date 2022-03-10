@@ -10,4 +10,5 @@ rayon = "*"
 tracing = "*"
 tracing-subscriber = "*"
 regex = "*"
+crossbeam = "*"
 
